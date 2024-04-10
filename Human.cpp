@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <stdlib.h> 
 #include <math.h> 
 #include <stdio.h>
@@ -152,6 +152,23 @@ void init() {
     glEnable(GL_LIGHT0);
 }
 
+void drawCheekSphereAttached(double r_big, double r_small_ratio, double theta) {
+    double r_small = r_big * r_small_ratio; // 큰 구의 반지름에 따른 작은 구의 반지름 계산
+    // 큰 구 표면에 작은 구의 중심이 위치하도록 계산
+    double x = r_big * cos(theta);
+    double y = r_big * sin(theta);
+    // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
+    double z = -0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+
+    // 현재 좌표 저장
+    glPushMatrix();
+
+    glTranslatef(x, y, z); // 새로운 위치로 이동
+    glColor3f(1.0, 0.75, 0.8); // 핑크색 설정 (RGB 값)
+    drawSphere(r_small, 10, 10, 1.0, 0.75, 0.8); // 큰 구를 핑크색으로 그리기
+    glPopMatrix();
+}
+
 void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glShadeModel(GL_SMOOTH);
@@ -164,6 +181,9 @@ void draw() {
     // drawSphere(1.0, 10, 10, 0.9725, 0.8431, 0.5216); // Draw the large sphere with its color
     drawSmallSphereAttached(1.0, 0.04, 0.18); // Draw the small sphere attached with its radius and color
     drawSmallSphereAttached(1.0, 0.04, -0.18);
+
+    drawCheekSphereAttached(1.0, 0.15, 0.33);
+
     drawNoseAttached(1.0, 0.1, 0.08);
     drawNoseBridge(1.0, 0.05, -0.05, 0.05);
     drawNoseBridge(1.0, 0.05, 0.03, 0.06);
@@ -171,6 +191,8 @@ void draw() {
     drawNoseBridge(1.0, 0.05, -0.03, 0.06);
     drawNoseBridge(1.0, 0.05, -0.05, 0.05);
     drawNoseAttached(1.0, 0.1, -0.08);
+
+    drawCheekSphereAttached(1.0, 0.15, -0.33);
 
     glutSwapBuffers();
 }
