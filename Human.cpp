@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <windows.h>
 #include <stdlib.h> 
 #include <math.h> 
 #include <stdio.h>
@@ -43,7 +43,31 @@ void drawSphere(double r, int lats, int longs, float red, float green, float blu
     }
 }
 
-void drawSmallSphereAttached(double r_big, double r_small_ratio, double theta) {
+void drawEllipsoid(double rx, double ry, double rz, int stacks, int slices, float red, float green, float blue) {
+    int i, j;
+    glColor3f(red, green, blue);
+    for (i = 0; i < stacks; ++i) {
+        double phi1 = M_PI * (-0.5 + (double)i / stacks);
+        double phi2 = M_PI * (-0.5 + (double)(i + 1) / stacks);
+        glBegin(GL_QUAD_STRIP);
+        for (j = 0; j <= slices; ++j) {
+            double theta = 2 * M_PI * (double)j / slices;
+            double x1 = cos(theta) * cos(phi1);
+            double y1 = sin(theta) * cos(phi1);
+            double z1 = sin(phi1);
+
+            double x2 = cos(theta) * cos(phi2);
+            double y2 = sin(theta) * cos(phi2);
+            double z2 = sin(phi2);
+
+            glVertex3d(rx * x1, ry * y1, rz * z1);
+            glVertex3d(rx * x2, ry * y2, rz * z2);
+        }
+        glEnd();
+    }
+}
+
+void drawEyeSphereAttached(double r_big, double r_small_ratio, double theta) {
     double r_small = r_big * r_small_ratio; // 큰 구의 반지름에 따른 작은 구의 반지름 계산
     // 큰 구 표면에 작은 구의 중심이 위치하도록 계산
     double x = r_big * cos(theta);
@@ -94,29 +118,40 @@ void drawNoseBridge(double r_big, double r_small_ratio, double theta, float z_up
     glPopMatrix();
 }
 
-void drawEllipsoid(double rx, double ry, double rz, int stacks, int slices, float red, float green, float blue) {
+void drawEarAttached(double r_big, double r_small_ratio, double theta, float red, float green, float blue, float y_up) {
+    double r_small = r_big * r_small_ratio; // 큰 구의 반지름에 따른 작은 구의 반지름 계산
+    // 큰 구 표면에 작은 구의 중심이 위치하도록 계산
+    double x = r_big * sin(theta);
+    double y = 0.1;
+    double z = r_big * cos(theta) - 0.3;
 
-    int i, j;
-    glColor3f(red, green, blue);
-    for (i = 0; i < stacks; ++i) {
-        double phi1 = M_PI * (-0.5 + (double)i / stacks);
-        double phi2 = M_PI * (-0.5 + (double)(i + 1) / stacks);
-        glBegin(GL_QUAD_STRIP);
-        for (j = 0; j <= slices; ++j) {
-            double theta = 2 * M_PI * (double)j / slices;
-            double x1 = cos(theta) * cos(phi1);
-            double y1 = sin(theta) * cos(phi1);
-            double z1 = sin(phi1);
+    // 현재 좌표 저장
+    glPushMatrix();
 
-            double x2 = cos(theta) * cos(phi2);
-            double y2 = sin(theta) * cos(phi2);
-            double z2 = sin(phi2);
+    glTranslatef(x, y + y_up, z); // 새로운 위치로 이동
+    drawSphere(r_small, 10, 10, red, green, blue); // 작은 구를 얼굴과 같은 색으로 그리기
+    // 이전 좌표로 복원
+    glPopMatrix();
+}
 
-            glVertex3d(rx * x1, ry * y1, rz * z1);
-            glVertex3d(rx * x2, ry * y2, rz * z2);
-        }
-        glEnd();
-    }
+void drawCheekSphereAttached(double r_big, double r_small_ratio, double theta) {
+    double r_small = r_big * r_small_ratio; // 큰 구의 반지름에 따른 작은 구의 반지름 계산
+    // 큰 구 표면에 작은 구의 중심이 위치하도록 계산
+    double x = r_big * cos(theta) - 0.27;
+    double y = r_big * sin(theta);
+    // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
+    double z = -0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+
+    // 색상 설정
+    float r = 255.0 / 255;
+    float g = 150.0 / 255;
+    float b = 115.0 / 255;
+    // 현재 좌표 저장
+    glPushMatrix();
+
+    glTranslatef(x, y, z); // 새로운 위치로 이동
+    drawSphere(r_small, 10, 10, r, g, b); // 큰 구를 그리기
+    glPopMatrix();
 }
 
 
@@ -156,21 +191,33 @@ void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glShadeModel(GL_SMOOTH);
 
-    float face_red = 239.0 / 255.0;
-    float face_green = 203.0 / 255.0;
-    float face_blue = 117.0 / 255.0;
+    //float face_red = 239.0 / 255.0;
+    //float face_green = 203.0 / 255.0;
+    //float face_blue = 117.0 / 255.0;
+
+    float face_red = 254.0 / 255.0;
+    float face_green = 220.0 / 255.0;
+    float face_blue = 133.0 / 255.0;
 
     drawEllipsoid(1.0, 1.1, 1.0, 20, 20, face_red, face_green, face_blue);
     // drawSphere(1.0, 10, 10, 0.9725, 0.8431, 0.5216); // Draw the large sphere with its color
-    drawSmallSphereAttached(1.0, 0.04, 0.18); // Draw the small sphere attached with its radius and color
-    drawSmallSphereAttached(1.0, 0.04, -0.18);
-    drawNoseAttached(1.0, 0.1, 0.08);
+
+    drawEyeSphereAttached(1.0, 0.04, 0.18); // Eyes.
+    drawEyeSphereAttached(1.0, 0.04, -0.18);
+
+    drawNoseAttached(1.0, 0.1, 0.08); // Nose.
     drawNoseBridge(1.0, 0.05, -0.05, 0.05);
     drawNoseBridge(1.0, 0.05, 0.03, 0.06);
     drawNoseBridge(1.0, 0.05, 0.00, 0.06);
     drawNoseBridge(1.0, 0.05, -0.03, 0.06);
     drawNoseBridge(1.0, 0.05, -0.05, 0.05);
     drawNoseAttached(1.0, 0.1, -0.08);
+
+    drawEarAttached(1.0, 0.2, 0.5, face_red, face_green, face_blue, 0.45); // Ear.
+    drawEarAttached(1.0, 0.2, 0.5, face_red, face_green, face_blue, -0.65);
+
+    drawCheekSphereAttached(1.0, 0.3, 0.25); // Cheek.
+    drawCheekSphereAttached(1.0, 0.3, -0.25);
 
     glutSwapBuffers();
 }
