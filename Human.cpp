@@ -113,7 +113,7 @@ void drawNoseBridge(double r_big, double r_small_ratio, double theta, float z_up
     glPushMatrix();
 
     glTranslatef(x, y, z + z_up); // 새로운 위치로 이동
-    drawSphere(r_small, 10, 10, 255, 255, 255); // 작은 구를 white color 그리기
+    drawSphere(r_small, 30, 30, 255, 255, 255); // 작은 구를 white color 그리기
     // 이전 좌표로 복원
     glPopMatrix();
 }
@@ -129,7 +129,7 @@ void drawEarAttached(double r_big, double r_small_ratio, double theta, float red
     glPushMatrix();
 
     glTranslatef(x, y + y_up, z); // 새로운 위치로 이동
-    drawSphere(r_small, 10, 10, red, green, blue); // 작은 구를 얼굴과 같은 색으로 그리기
+    drawSphere(r_small, 30, 30, red, green, blue); // 작은 구를 얼굴과 같은 색으로 그리기
     // 이전 좌표로 복원
     glPopMatrix();
 }
@@ -150,7 +150,7 @@ void drawCheekSphereAttached(double r_big, double r_small_ratio, double theta) {
     glPushMatrix();
 
     glTranslatef(x, y, z); // 새로운 위치로 이동
-    drawSphere(r_small, 10, 10, r, g, b); // 큰 구를 그리기
+    drawSphere(r_small, 30, 30, r, g, b); // 큰 구를 그리기
     glPopMatrix();
 }
 
