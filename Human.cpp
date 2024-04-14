@@ -118,13 +118,18 @@ void drawLeg(float baseRadius, float topRadius, float height, float x_pos, float
     GLUquadric* quadric = gluNewQuadric(); // 원기둥을 그리기 위한 쿼드릭 객체 생성
 
     glPushMatrix(); // 현재 행렬 상태를 푸시
-  
+    GLfloat legR = 161.0 / 255.0;
+    GLfloat legG = 119.0 / 255.0;
+    GLfloat legB = 67.0 / 255.0;
+    
     // 원기둥 그리기
     glTranslatef(0, 0.35, -0.9);
+    glColor3f(legR, legG, legB); // 원기둥 색 설정
     gluCylinder(quadric, 0.23, 0.23, 0.5, 20, 20); // 원기둥 객체, 기저 반경, 상단 반경, 높이, 원주분할수, 높이분할수
     glTranslatef(0, -0.35, 0.9);
     // 원기둥 그리기
     glTranslatef(0, -0.35, -0.9);
+    glColor3f(legR, legG, legB); // 원기둥 색 설정
     gluCylinder(quadric, 0.23, 0.23, 0.5, 20, 20); // 원기둥 객체, 기저 반경, 상단 반경, 높이, 원주분할수, 높이분할수
 
     //glPushMatrix();  // 하단 위치로 이동
@@ -311,7 +316,10 @@ void draw() {
     glTranslatef(0.0, 0.0, 1);
 
     glTranslatef(0.0, 0.0, -1);
-    glColor3f(0.0, 0.0, 0.0); // 원기둥 색 설정
+    GLfloat legR = 161.0 / 255.0;
+    GLfloat legG = 119.0 / 255.0;
+    GLfloat legB = 67.0 / 255.0;
+    glColor3f(legR, legG, legB); // 원기둥 색 설정
     drawLeg(0.025, 0.025, 0.17, 1.0, 0.1, -0.1, -67);//오른쪽 위
     glTranslatef(0.0, 0.0, 1);
 
