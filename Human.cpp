@@ -1,4 +1,4 @@
-﻿#include <windows.h>
+#include <windows.h>
 #include <stdlib.h> 
 #include <math.h> 
 #include <stdio.h>
@@ -47,17 +47,17 @@ void drawSphere(double r, int lats, int longs, float red, float green, float blu
             glVertex3f(r * x * zr1, r * y * zr1, r * z1);
         }
 
-       
+
 
         glEnd();
     }
-    
+
 }
 
 
 
 void drawEllipsoid(double rx, double ry, double rz, int stacks, int slices, float red, float green, float blue) {
-  
+
     int i, j;
 
     glColor3f(red, green, blue);
@@ -80,16 +80,16 @@ void drawEllipsoid(double rx, double ry, double rz, int stacks, int slices, floa
         }
         glEnd();
     }
-  
-   // glBindTexture(GL_TEXTURE_2D, 0);
+
+    // glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void drawMustache(float baseRadius, float topRadius, float height, float x_pos, float y_pos, float z_pos,float theta) {
+void drawMustache(float baseRadius, float topRadius, float height, float x_pos, float y_pos, float z_pos, float theta) {
     glPushAttrib(GL_CURRENT_BIT);
     GLUquadric* quadric = gluNewQuadric(); // 원기둥을 그리기 위한 쿼드릭 객체 생성
 
     glPushMatrix(); // 현재 행렬 상태를 푸시
-    
+
 
     // 원기둥을 그리기 위한 위치 조정
     glTranslatef(x_pos, y_pos, z_pos); // 원기둥 위치로 이동
@@ -106,6 +106,34 @@ void drawMustache(float baseRadius, float topRadius, float height, float x_pos, 
     // 상단 구 그리기: 원기둥의 상단에 위치
     glTranslatef(0, 0, height);  // 원기둥의 높이만큼 이동하여 상단에 구를 배치
     drawSphere(topRadius, 20, 20, 0.0, 0.0, 0.0);  // 구 그리기
+
+
+    glPopMatrix(); // 원래 행렬 상태로 복원
+    gluDeleteQuadric(quadric); // 쿼드릭 객체 메모리 해제
+    glPopAttrib();  // 상태 복원
+}
+
+void drawLeg(float baseRadius, float topRadius, float height, float x_pos, float y_pos, float z_pos, float theta) {
+    glPushAttrib(GL_CURRENT_BIT);
+    GLUquadric* quadric = gluNewQuadric(); // 원기둥을 그리기 위한 쿼드릭 객체 생성
+
+    glPushMatrix(); // 현재 행렬 상태를 푸시
+  
+    // 원기둥 그리기
+    glTranslatef(0, 0.35, -0.9);
+    gluCylinder(quadric, 0.23, 0.23, 0.5, 20, 20); // 원기둥 객체, 기저 반경, 상단 반경, 높이, 원주분할수, 높이분할수
+    glTranslatef(0, -0.35, 0.9);
+    // 원기둥 그리기
+    glTranslatef(0, -0.35, -0.9);
+    gluCylinder(quadric, 0.23, 0.23, 0.5, 20, 20); // 원기둥 객체, 기저 반경, 상단 반경, 높이, 원주분할수, 높이분할수
+
+    //glPushMatrix();  // 하단 위치로 이동
+    //drawSphere(baseRadius, 20, 20, 0.0, 0.0, 0.0);  // 구 그리기
+    //glPopMatrix();
+
+    //// 상단 구 그리기: 원기둥의 상단에 위치
+    //glTranslatef(0, 0, height);  // 원기둥의 높이만큼 이동하여 상단에 구를 배치
+    //drawSphere(topRadius, 20, 20, 0.0, 0.0, 0.0);  // 구 그리기
 
 
     glPopMatrix(); // 원래 행렬 상태로 복원
@@ -145,7 +173,7 @@ void drawNoseAttached(double r_big, double r_small_ratio, double theta) {
     drawSphere(r_small, 10, 10, 255, 255, 255); // 작은 구를 white color 그리기
     // 이전 좌표로 복원
     glPopMatrix();
-    
+
 }
 
 void drawNoseBridge(double r_big, double r_small_ratio, double theta, float z_up) {
@@ -211,7 +239,7 @@ void computeLocation() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glFrustum(-d * 0.5, d * 0.5, -d * 0.5, d * 0.5, d - 1.1, d + 1.1);
-    gluLookAt(x, y, z, 0, 0, 0, 0, 0, 1);
+    gluLookAt(x + 0.5, y, z, 0, 0, 0, 0, 0, 1);
 }
 
 void init() {
@@ -222,7 +250,7 @@ void init() {
     glClearColor(1.0, 1.0, 1.0, 0.0);
     computeLocation();
 
-    
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient_intensity);
@@ -233,7 +261,7 @@ void init() {
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_LIGHT0);
-    
+
 }
 
 void draw() {
@@ -249,10 +277,9 @@ void draw() {
     float face_blue = 133.0 / 255.0;
 
 
-    
+
     drawEllipsoid(1.0, 1.1, 1.0, 20, 20, face_red, face_green, face_blue);
-    
-    
+
     // drawSphere(1.0, 10, 10, 0.9725, 0.8431, 0.5216); // Draw the large sphere with its color
 
     glColor3f(0.0, 0.0, 0.0); // 원기둥 색 설정
@@ -278,7 +305,15 @@ void draw() {
     drawCheekSphereAttached(1.0, 0.3, 0.25); // Cheek.
     drawCheekSphereAttached(1.0, 0.3, -0.25);
 
-    
+
+    glTranslatef(0.0, 0.0, -1);
+    drawEllipsoid(0.65, 0.8, 0.65, 20, 20, face_red, face_green, face_blue);
+    glTranslatef(0.0, 0.0, 1);
+
+    glTranslatef(0.0, 0.0, -1);
+    glColor3f(0.0, 0.0, 0.0); // 원기둥 색 설정
+    drawLeg(0.025, 0.025, 0.17, 1.0, 0.1, -0.1, -67);//오른쪽 위
+    glTranslatef(0.0, 0.0, 1);
 
     glutSwapBuffers();
 }
@@ -315,7 +350,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(300, 300);
     glutCreateWindow("Sphere");
 
-    
+
 
 
     init();
