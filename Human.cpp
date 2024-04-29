@@ -234,6 +234,52 @@ void drawCheek(double r_big, double r_small_ratio, double theta) {
     glPopMatrix();
 }
 
+void drawRightArm(float baseRadius, float topRadius, float height, float x_pos, float y_pos, float z_pos, float theta) {
+    glPushAttrib(GL_CURRENT_BIT);
+    double r_small = 1.0 * 0.15;
+    GLUquadric* quadric = gluNewQuadric(); // 원기둥을 그리기 위한 쿼드릭 객체 생성
+
+    glPushMatrix(); // 현재 행렬 상태를 푸시
+    float armR = 254.0 / 255.0;
+    float armG = 220.0 / 255.0;
+    float armB = 133.0 / 255.0;
+
+    // 원기둥 그리기
+    glTranslatef(0.23, 0.8, -1.24);
+    glColor3f(armR, armG, armB); // 원기둥 색 설정
+    // 원기둥을 회전시켜 사선으로 위치시킴
+    // 여기서는 예를 들어 x축과 z축을 중심으로 45도 회전시켜보았습니다.
+    glRotatef(30, 1, 0, 0); // x축 기준으로 추가로 30도 회전
+    gluCylinder(quadric, baseRadius, topRadius, 1.5, 30, 20);
+    drawSphere(r_small, 5, 20, armR, armG, armB); 
+
+    glPopMatrix(); // 원래 행렬 상태로 복원
+    gluDeleteQuadric(quadric); // 쿼드릭 객체 메모리 해제
+    glPopAttrib();  // 상태 복원
+}
+
+void drawLeftArm(float baseRadius, float topRadius, float height, float x_pos, float y_pos, float z_pos, float theta) {
+    glPushAttrib(GL_CURRENT_BIT);
+    double r_small = 1.0 * 0.15;
+    GLUquadric* quadric = gluNewQuadric(); // 원기둥을 그리기 위한 쿼드릭 객체 생성
+
+    glPushMatrix(); // 현재 행렬 상태를 푸시
+    float armR = 254.0 / 255.0;
+    float armG = 220.0 / 255.0;
+    float armB = 133.0 / 255.0;
+
+    // 원기둥 그리기
+    glTranslatef(0.23, -0.8, -1.24);
+    glColor3f(armR, armG, armB); // 원기둥 색 설정
+    glRotatef(30, -1, 0, 0); // x축 기준으로 추가로 30도 회전
+    gluCylinder(quadric, baseRadius, topRadius, 1.5, 30, 20);
+    drawSphere(r_small, 5, 20, armR, armG, armB);
+
+    glPopMatrix(); // 원래 행렬 상태로 복원
+    gluDeleteQuadric(quadric); // 쿼드릭 객체 메모리 해제
+    glPopAttrib();  // 상태 복원
+}
+
 
 void computeLocation() {
     double x = 2 * cos(user_theta);
@@ -320,8 +366,13 @@ void draw() {
     GLfloat legG = 119.0 / 255.0;
     GLfloat legB = 67.0 / 255.0;
     glColor3f(legR, legG, legB); // 원기둥 색 설정
-    drawLeg(0.025, 0.025, 0.17, 1.0, 0.1, -0.1, -67);//오른쪽 위
+    drawLeg(0.028, 0.028, 0.17, 1.0, 0.1, -0.1, -67);//오른쪽 위
     glTranslatef(0.0, 0.0, 1);
+
+
+    drawRightArm(0.15, 0.15, 1.2, 1.0, 3.0, 0.0, 0); 
+    drawLeftArm(0.15, 0.15, 1.2, 1.0, 3.0, 0.0, 0);
+
 
     glutSwapBuffers();
 }
@@ -357,9 +408,6 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(50, 100);
     glutInitWindowSize(300, 300);
     glutCreateWindow("Sphere");
-
-
-
 
     init();
     glutDisplayFunc(draw);
