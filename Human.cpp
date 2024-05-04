@@ -92,7 +92,7 @@ void drawMustache(float baseRadius, float topRadius, float height, float x_pos, 
 
 
     // 원기둥을 그리기 위한 위치 조정
-    glTranslatef(x_pos, y_pos, z_pos); // 원기둥 위치로 이동
+    glTranslatef(x_pos, y_pos, z_pos-0.4); // 원기둥 위치로 이동
     glRotatef(theta, 1.0, 0.0, 0.0); // 원기둥을 z축에서 x축으로 회전시킴
 
 
@@ -152,7 +152,7 @@ void drawEye(double r_big, double r_small_ratio, double theta) {
     double x = r_big * cos(theta);
     double y = r_big * sin(theta);
     // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
-    double z = 0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+    double z = -0.25; // 단순화를 위해 z를 0으로 가정하여 적용
 
     // 현재 좌표 저장
     glPushMatrix();
@@ -169,7 +169,7 @@ void drawNose(double r_big, double r_small_ratio, double theta) {
     double x = r_big * cos(theta);
     double y = r_big * sin(theta);
     // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
-    double z = -0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+    double z = -0.5; // 단순화를 위해 z를 0으로 가정하여 적용
 
     // 현재 좌표 저장
     glPushMatrix();
@@ -187,7 +187,7 @@ void drawNoseBridge(double r_big, double r_small_ratio, double theta, float z_up
     double x = r_big * cos(theta);
     double y = r_big * sin(theta);
     // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
-    double z = -0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+    double z = -0.5; // 단순화를 위해 z를 0으로 가정하여 적용
 
     // 현재 좌표 저장
     glPushMatrix();
@@ -217,10 +217,10 @@ void drawEar(double r_big, double r_small_ratio, double theta, float red, float 
 void drawCheek(double r_big, double r_small_ratio, double theta) {
     double r_small = r_big * r_small_ratio; // 큰 구의 반지름에 따른 작은 구의 반지름 계산
     // 큰 구 표면에 작은 구의 중심이 위치하도록 계산
-    double x = r_big * cos(theta) - 0.27;
+    double x = r_big * cos(theta) - 0.34;
     double y = r_big * sin(theta);
     // 작은 구의 반지름만큼 z를 조정하지 않아도 됨
-    double z = -0.1; // 단순화를 위해 z를 0으로 가정하여 적용
+    double z = -0.35; // 단순화를 위해 z를 0으로 가정하여 적용
 
     // 색상 설정
     float r = 255.0 / 255;
@@ -350,8 +350,8 @@ void draw() {
     drawNoseBridge(1.0, 0.05, -0.05, 0.05);
     drawNose(1.0, 0.1, -0.08);
 
-    drawEar(1.0, 0.2, 0.5, face_red, face_green, face_blue, 0.45); // Ear.
-    drawEar(1.0, 0.2, 0.5, face_red, face_green, face_blue, -0.65);
+    drawEar(1.0, 0.2, 0.5, face_red, face_green, face_blue, 0.55); // Ear.
+    drawEar(1.0, 0.2, 0.5, face_red, face_green, face_blue, -0.7);
 
     drawCheek(1.0, 0.3, 0.25); // Cheek.
     drawCheek(1.0, 0.3, -0.25);
