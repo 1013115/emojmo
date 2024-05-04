@@ -18,6 +18,7 @@ double user_height = 0;
 
 double user_theta_l = 1;
 double user_height_l = 0;
+double zoomFactor = 1.0;
 
 const float MY_PI = 3.14159265358979323846;
 // commit please
@@ -286,7 +287,7 @@ void computeLocation() {
     double x = 2 * cos(user_theta);
     double y = 2 * sin(user_theta);
     double z = user_height;
-    double d = sqrt(x * x + y * y + z * z);
+    double d = sqrt(x * x + y * y + z * z) / zoomFactor; // Apply zoom factor
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -299,8 +300,7 @@ void init() {
     GLfloat sun_intensity[] = { 0.3, 0.3, 0.3, 1.0 };
     GLfloat ambient_intensity[] = { 0.7, 0.7, 0.7, 1.0 };
 
-    //glClearColor(1.0, 1.0, 1.0, 0.0);
-    glClearColor(0.0, 0.0, 0.0, 0.0); // 까만색 배경
+    glClearColor(1.0, 1.0, 1.0, 0.0);
 
     computeLocation();
 
@@ -321,6 +321,12 @@ void init() {
 void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glShadeModel(GL_SMOOTH);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity(); // Reset the model-view matrix
+
+    // Apply rotation from mouse motion
+    // glRotatef(rotX, 1.0, 0.0, 0.0); // Rotate about the x-axis
+    glRotatef(rotY, 0.0, 0.0, 1.0); // Rotate about the z-axis
 
     //float face_red = 239.0 / 255.0;
     //float face_green = 203.0 / 255.0;
@@ -418,6 +424,19 @@ void mouseMotion(int x, int y) {
     glutPostRedisplay(); // 화면 다시 그리기
 }
 
+void keyboard(unsigned char key, int x, int y) {
+    switch (key) {
+    case 'a': // Zoom in
+        zoomFactor *= 0.9;
+        break;
+    case 'z': // Zoom out
+        zoomFactor /= 0.9;
+        break;
+    }
+    computeLocation();
+    glutPostRedisplay();
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
@@ -429,6 +448,7 @@ int main(int argc, char** argv) {
     glutMotionFunc(mouseMotion); // 마우스 드래깅 이벤트 핸들러 등록
     glutDisplayFunc(draw);
     glutVisibilityFunc(visible);
+    glutKeyboardFunc(keyboard);
     glutSpecialFunc(special);
     glutMainLoop();
     return 0;
